@@ -1,0 +1,14 @@
+
+pip~=25.0.1
+wheel~=0.45.1
+protobuf~=6.30.1
+pillow~=11.0.0
+redis~=5.2.1
+pydantic~=2.10.6
+pydantic-settings~=2.8.1
+requests~=2.32.3
+tweepy~=4.15.0
+yt-dlp~=2025.3.27
+instaloader~=4.14.1
+srt~=3.5.3
+aiofiles~=24.1.0

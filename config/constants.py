@@ -1,6 +1,7 @@
 
 # Redis related constants
 REDIS_VIDEO_QUEUE_NAME : str= "video_processing_queue"
+REDIS_VIDEO_PROCESSING_COMPLETED_NAME : str= "video_processing_completed"
 
 # Job status constants
 STATUS_PENDING : str = "pending"

@@ -1,5 +1,4 @@
 from model.video_model import ProcessInfo, MediaType
-import config.constants as constants
 from worker.video_worker import VideoWorker
 from worker.worker_interface import WorkerInterface
 

@@ -61,28 +61,28 @@ def download_youtube_video_with_ytdlp(youtube_url):
 #         file=file
 #     )
 
-# def download_video_from_twitter(url: str) -> CustomFile:
-#
-#     # Set up tweepy with your credentials
-#     consumer_key = 'your_consumer_key'
-#     consumer_secret = 'your_consumer_secret'
-#     access_token = 'your_access_token'
-#     access_token_secret = 'your_access_token_secret'
-#
-#     auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret, access_token, access_token_secret)
-#     api = tweepy.API(auth)
-#
-#     tweet_id = url.split('/')[-1]
-#     tweet = api.get_status(tweet_id, tweet_mode='extended')
-#     media = tweet.extended_entities['media'][0]
-#     video_url = media['video_info']['variants'][0]['url']
-#
-#     response = requests.get(video_url)
-#     file_path = 'twitter_video.mp4'
-#     with open(file_path, 'wb') as f:
-#         f.write(response.content)
-#
-#     return open(file_path, 'rb')
+def download_video_from_twitter(url: str) -> CustomFile:
+
+    # Set up tweepy with your credentials
+    consumer_key = 'your_consumer_key'
+    consumer_secret = 'your_consumer_secret'
+    access_token = 'your_access_token'
+    access_token_secret = 'your_access_token_secret'
+
+    auth = tweepy.OAuth1UserHandler(consumer_key, consumer_secret, access_token, access_token_secret)
+    api = tweepy.API(auth)
+
+    tweet_id = url.split('/')[-1]
+    tweet = api.get_status(tweet_id, tweet_mode='extended')
+    media = tweet.extended_entities['media'][0]
+    video_url = media['video_info']['variants'][0]['url']
+
+    response = requests.get(video_url)
+    file_path = 'twitter_video.mp4'
+    with open(file_path, 'wb') as f:
+        f.write(response.content)
+
+    return open(file_path, 'rb')
 
 
 def download_online_video_from_direct_url(url: str) -> CustomFile:

@@ -5,6 +5,7 @@ from pydantic_settings import BaseSettings
 
 class Properties(BaseSettings):
     PORT : int
+    REDIS_PORT: int
     PROTOCOL : str
     BASE_URL : str
     COMPLETE_BASE_URL: str
@@ -15,6 +16,7 @@ class Properties(BaseSettings):
     CHUNK_SIZE: int
     WIDTH_720P: int
     HEIGHT_720P: int
+
 
 
     class Config:

@@ -1,16 +1,17 @@
 import asyncio
+import json
 import logging
 import os
 from concurrent.futures import ThreadPoolExecutor
-from datetime import timedelta
-from typing import Dict, List
-
+from typing import Dict
 
 import service.subtitle_service as subtitle_service
 import utils.file_utils as file_utils
 import utils.validators as validators
 from model.file_model import CustomFile
+from model.redis_model import ProcessedDataTransfer
 from model.video_model import VideoInfo, ProcessingStatus, ProcessInfo
+
 from service.ffmpeg_service import FfmpegService
 
 from config.config import properties
@@ -18,10 +19,10 @@ from config.config import properties
 logger = logging.getLogger(__name__)
 
 class VideoService:
-    def __init__(self, ffmpeg_service: FfmpegService):
+    def __init__(self):
         self.executor = ThreadPoolExecutor(max_workers=properties.MAX_WORKERS)
         self.video_jobs: Dict[str, VideoInfo] = {}
-        self.ffmpeg_service = ffmpeg_service
+        self.ffmpeg_service = FfmpegService()
 
     def upload_and_process(self, file: CustomFile, video_process_info: ProcessInfo) -> VideoInfo:
         """Upload a video file and submit for processing."""
@@ -62,6 +63,7 @@ class VideoService:
 
 
     async def _process_video(self, file_id: str, video_process_info:ProcessInfo) -> None:
+        from redis_queue.job_processor import JobProcessor
         """Process the video in a separate thread."""
         if file_id not in self.video_jobs:
             logger.error(f"Video job not found: {file_id}")
@@ -71,5 +73,15 @@ class VideoService:
         updated_info = self.ffmpeg_service.trim_video(video_info,video_process_info)
         self.video_jobs[file_id] = updated_info
 
-        # for segment in updated_info.segments:
-            #Send Request to FastApi server to save in DB
+        for segment in updated_info.segments:
+            # Send Request to FastApi server to save in DB
+            trimmed_video_json = ProcessedDataTransfer(
+                file_name=segment,
+                location=validators.generate_full_path_from_location(os.path.join(properties.TRIMMED_DIR, segment)),
+                original_video_id=video_process_info.original_video_id,
+                telegram_chat_id=video_process_info.telegram_chat_id
+            )
+
+            JobProcessor().send_to_redis_queue(
+                json.dumps(trimmed_video_json.model_dump(exclude_none=True))
+            )

@@ -5,6 +5,8 @@ from pydantic import BaseModel
 
 import config.constants as constants
 
+
+
 class ProcessingStatus(str, Enum):
     PENDING = constants.STATUS_PENDING
     PROCESSING = constants.STATUS_PROCESSING
@@ -37,9 +39,12 @@ class ProcessInfo(BaseModel):
     # Declaring and setting the default Values
     media_type: MediaType
     url: str
+    original_video_id: Optional[int]= None
     segment_time: int = constants.DEFAULT_VIDEO_SEGMENT_TIME
     start_time: int = constants.DEFAULT_START_TIME
     end_time: int = constants.DEFAULT_END_TIME
     skip_pairs: List[Tuple[int, int]] = []
     screen_type: VideoScreenType = VideoScreenType.LANDSCAPE
     edit_type: Optional[str] = None # To be done
+    telegram_chat_id: Optional[int] = None
+
